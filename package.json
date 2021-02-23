@@ -1,0 +1,22 @@
+{
+  "name": "jest-demos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["html"]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^27.0.0-next.1"
+  },
+  "dependencies": {
+    "@types/jest": "^26.0.20"
+  }
+}
