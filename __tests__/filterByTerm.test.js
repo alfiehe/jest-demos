@@ -33,7 +33,10 @@ describe("Filter function", () => {
 
   test("is should throw when searchTerm is empty string", () => {
     const input = [];
-    // 为啥这里要套个箭头函数呢
     expect(() => filterByTerm(input, '')).toThrowError(Error('searchTerm cannot be empty'));
+  });
+  test("is should throw when inputArr is empty array", () => {
+    const input = [];
+    expect(() => filterByTerm(input, 'search')).toThrowError(Error('inputArr cannot be empty'));
   });
 });
