@@ -1,27 +1,23 @@
 /**
  * 异步代码测试用例
  */
-import { 
-  fetchThenCallback,
-  fetchReturnPromise,
-  fetchReturn403
-} from '../src/fetchDemo';
+import http from '../src/http';
 
-describe('1 使用 done() 测试', () => {
+describe('测试 done() 方法使用', () => {
   it('fetchThenCallback done() test', (done) => {
-    fetchThenCallback(data => {
+    http.fetchThenCallback(data => {
       expect(data).toMatchObject({ code: 200 });
       done();
     });
   });
   it('fetchReturnPromise done() test', (done) => {
-    fetchReturnPromise().then(response => {
+    http.fetchReturnPromise().then(response => {
       expect(response.data).toMatchObject({ code: 200 });
       done();
     });
   });
   it('fetchReturn403 done() test', (done) => {
-    fetchReturn403().catch(error => {
+    http.fetchReturn403().catch(error => {
       expect(error.toString()).toEqual('Error: Request failed with status code 403');
       expect(error.toString()).toMatch(/403/);
       done();
@@ -29,9 +25,9 @@ describe('1 使用 done() 测试', () => {
   });
 });
 
-describe('2 使用 return 测试，如果返回 Promise 对象', () => {
+describe('测试 return 方式，被测试方法需返回 Promise 对象', () => {
   it('fetchReturnPromise return test', () => {
-    return fetchReturnPromise().then(res => {
+    return http.fetchReturnPromise().then(res => {
       expect(res.data).toMatchObject({ code: 200 });
     });
   });
@@ -40,32 +36,44 @@ describe('2 使用 return 测试，如果返回 Promise 对象', () => {
     // 因此需要加上下面一句，指定必须只能执行一次 expect
     expect.assertions(1);
 
-    return fetchReturn403().catch(error => {
+    return http.fetchReturn403().catch(error => {
       expect(error.toString()).toEqual('Error: Request failed with status code 403');
     });
   });
 });
 
-describe('3 使用 return + resolves/rejects 测试，如果返回 Promise 对象', () => {
+describe('测试 return + resolves/rejects 方式, 被测试方法需返回 Promise 对象', () => {
   it('fetchReturnPromise return + resolves test', () => {
-    return expect(fetchReturnPromise()).resolves.toMatchObject({ data: { code: 200 } });
+    return expect(http.fetchReturnPromise()).resolves.toMatchObject({ data: { code: 200 } });
   });
   it('fetchReturnPromise return + rejects test', () => {
-    return expect(fetchReturn403()).rejects.toThrow();
+    return expect(http.fetchReturn403()).rejects.toThrow();
   });
 });
 
-describe('4 使用 async + await 测试，如果返回 Promise 对象', () => {
+describe('测试 async + await 方式, 被测试方法需返回 Promise 对象', () => {
   it('fetchReturnPromise use async await test', async() => {
-    const result = await fetchReturnPromise();
+    const result = await http.fetchReturnPromise();
     expect(result.data).toMatchObject({ code: 200 });
   });
   it('fetchReturn403 use async await test', async() => {
     expect.assertions(1);
     try {
-      await fetchReturn403();
+      await http.fetchReturn403();
     } catch (error) {
       expect(error.toString()).toMatch(/403/);
     }
   });
 });
+
+describe('fetchPostsList 测试套件', () => {
+  test('测试 fetchPostsList 的回调函数能够调用', async () => {
+    expect.assertions(1);
+    let mockFn = jest.fn();
+    await http.fetchPostsList(mockFn);
+
+    // 断言mockFn被调用
+    expect(mockFn).toBeCalled();
+  });
+
+})
